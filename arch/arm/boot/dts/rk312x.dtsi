@@ -64,9 +64,9 @@
 		i2c1 = &i2c1;
 		i2c2 = &i2c2;
 		i2c3 = &i2c3;
-		mmc0 = &sdmmc;
+		mmc0 = &emmc;
 		mmc1 = &sdio;
-		mmc2 = &emmc;
+		mmc2 = &sdmmc;
 	};
 
 	cpus {
@@ -278,9 +278,7 @@
 	timer {
 		compatible = "arm,armv7-timer";
 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
 		clock-frequency = <24000000>;
 	};
 
@@ -1192,9 +1190,8 @@
 	gmac: eth@2008c000 {
 		compatible = "rockchip,rk3128-gmac";
 		reg = <0x2008c000 0x4000>;
-		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-		interrupt-names = "macirq", "eth_wake_irq";
+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "macirq";
 		rockchip,grf = <&grf>;
 		clocks = <&cru SCLK_MAC>,
 			 <&cru SCLK_MAC_RX>, <&cru SCLK_MAC_TX>,
@@ -1569,27 +1566,10 @@
 		};
 
 		gmac {
-			rgmii_pins: rgmii-pins {
-				rockchip,pins = <2 RK_PB0 3 &pcfg_pull_default>,
-						<2 RK_PB1 3 &pcfg_pull_default>,
-						<2 RK_PB3 3 &pcfg_pull_default>,
-						<2 RK_PB4 3 &pcfg_pull_default>,
-						<2 RK_PB5 3 &pcfg_pull_default>,
-						<2 RK_PB6 3 &pcfg_pull_default>,
-						<2 RK_PC0 3 &pcfg_pull_default>,
-						<2 RK_PC1 3 &pcfg_pull_default>,
-						<2 RK_PC2 3 &pcfg_pull_default>,
-						<2 RK_PC3 3 &pcfg_pull_default>,
-						<2 RK_PD1 3 &pcfg_pull_default>,
-						<2 RK_PC4 4 &pcfg_pull_default>,
-						<2 RK_PC5 4 &pcfg_pull_default>,
-						<2 RK_PC6 4 &pcfg_pull_default>,
-						<2 RK_PC7 4 &pcfg_pull_default>;
-			};
-
 			rmii_pins: rmii-pins {
 				rockchip,pins = <2 RK_PB0 3 &pcfg_pull_default>,
-						<2 RK_PB4 3 &pcfg_pull_default>,
+						<2 RK_PB1 3 &pcfg_pull_default>,
+						<2 RK_PB2 3 &pcfg_pull_default>,
 						<2 RK_PB5 3 &pcfg_pull_default>,
 						<2 RK_PB6 3 &pcfg_pull_default>,
 						<2 RK_PB7 3 &pcfg_pull_default>,
@@ -1597,7 +1577,8 @@
 						<2 RK_PC1 3 &pcfg_pull_default>,
 						<2 RK_PC2 3 &pcfg_pull_default>,
 						<2 RK_PC3 3 &pcfg_pull_default>,
-						<2 RK_PD1 3 &pcfg_pull_default>;
+						<2 RK_PD1 3 &pcfg_pull_default>,
+						<2 RK_PB4 3 &pcfg_pull_default>;
 			};
 		};
 

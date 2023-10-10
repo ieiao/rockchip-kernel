@@ -1001,6 +1001,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
 	rv1126-evb-ddr3-v13.dtb \
 	rk3036-evb.dtb \
 	rk3036-kylin.dtb \
+	rk3128-fireprime.dtb \
 	rk3066a-bqcurie2.dtb \
 	rk3066a-marsboard.dtb \
 	rk3066a-mk808.dtb \
