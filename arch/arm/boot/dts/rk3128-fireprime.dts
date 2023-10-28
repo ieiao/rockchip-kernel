@@ -48,14 +48,6 @@
 	model = "Rockchip RK3128 Fireprime board";
 	compatible = "rockchip,rk3128";
 
-	vcc_phy: vcc-phy-regulator {
-		compatible = "regulator-fixed";
-		enable-active-high;
-		regulator-name = "vcc_phy";
-		regulator-always-on;
-		regulator-boot-on;
-	};
-
 	vcc_sys: vcc-sys {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc_sys";
@@ -67,31 +59,36 @@
 
 	vcc_host_5v: vcc-host-5v-regulator {
 		compatible = "regulator-fixed";
-		enable-active-high;
-		gpio = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&host_vbus_drv>;
+		gpio = <&gpio3 RK_PC4 GPIO_ACTIVE_LOW>;
 		regulator-name = "vcc_host_5v";
 		regulator-always-on;
 	};
 
 	vcc_otg_vbus: otg-vbus-regulator {
 		compatible = "regulator-fixed";
-		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_HIGH>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&otg_vbus_drv>;
+		gpio = <&gpio3 RK_PC1 GPIO_ACTIVE_LOW>;
 		regulator-name = "vcc_otg_vbus";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-		enable-active-high;
 	};
 
-	xin32k: xin32k {
-		compatible = "fixed-clock";
-		clock-frequency = <32768>;
-		clock-output-names = "xin32k";
-		#clock-cells = <0>;
+	/* Give it a fake regulator, so dvfs can working. */
+	vdd_arm: vdd-arm-regulator {
+		compatible = "pwm-regulator";
+		pwms = <&pwm1 0 25000 0>;
+		regulator-name = "vdd_arm";
+		regulator-min-microvolt = <950000>;
+		regulator-max-microvolt = <1500000>;
+		regulator-always-on;
+		regulator-boot-on;
+		voltage-table = <1000000 0>,
+				<1150000 10>,
+				<1200000 20>,
+				<1350000 30>,
+				<1425000 40>;
 	};
+};
+
+&cpu0 {
+	cpu-supply = <&vdd_arm>;
 };
 
 &emmc {
@@ -113,7 +110,6 @@
 	clock_in_out = "output";
 	pinctrl-names = "default";
 	pinctrl-0 = <&rmii_pins>;
-	phy-supply = <&vcc_phy>;
 	phy-mode = "rmii";
 	snps,reset-active-low;
 	snps,reset-delays-us = <0 20000 200000>;
@@ -127,6 +123,14 @@
 	status = "okay";
 };
 
+&pwm1 {
+	status = "okay";
+};
+
+&pwm2 {
+	status = "okay";
+};
+
 &pinctrl {
 	usb2 {
 		host_vbus_drv: host-vbus-drv {
@@ -134,7 +138,7 @@
 		};
 
 		otg_vbus_drv: otg-vbus-drv {
-			rockchip,pins = <0 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
 };
